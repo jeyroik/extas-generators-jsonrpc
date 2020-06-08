@@ -4,8 +4,6 @@ namespace tests;
 use extas\components\console\TSnuffConsole;
 use extas\components\generators\jsonrpc\ByDocComment;
 use extas\components\jsonrpc\generators\ByInstallSection;;
-use extas\components\jsonrpc\operations\OperationRepository;
-use extas\components\plugins\install\InstallJsonRpcOperations;
 use extas\components\repositories\TSnuffRepository;
 
 use Dotenv\Dotenv;
@@ -28,14 +26,10 @@ class GeneratorTest extends TestCase
         parent::setUp();
         $env = Dotenv::create(getcwd() . '/tests/');
         $env->load();
-        $this->registerSnuffRepos([
-            'jsonRpcOperationRepository' => OperationRepository::class
-        ]);
     }
 
     protected function tearDown(): void
     {
-        $this->unregisterSnuffRepos();
     }
 
     public function testGenerateByPluginInstallDefault()
@@ -45,7 +39,7 @@ class GeneratorTest extends TestCase
             ByInstallSection::FIELD__OUTPUT => $this->getOutput()
         ]);
 
-        $plugins = [new InstallJsonRpcOperations()];
+        $plugins = [new InstallSomething()];
         $result = $generator->generate($plugins);
 
         $mustBe = include 'specs.php';

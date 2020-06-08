@@ -1,8 +1,7 @@
 <?php
 namespace extas\components\generators\jsonrpc;
 
-use extas\components\jsonrpc\crawlers\ByDocComment as Crawler;
-use extas\interfaces\jsonrpc\operations\IOperation;
+use extas\interfaces\operations\IJsonRpcOperation;
 
 /**
  * Class ByDocComment
@@ -21,8 +20,8 @@ class ByDocComment extends JsonRpcGenerator
      */
     protected function run(array $sourceItems): array
     {
-        if (isset($sourceItems[Crawler::NAME])) {
-            return $this->generate($sourceItems);
+        if (isset($sourceItems['by.doc.comment'])) {
+            return $this->generate($sourceItems['by.doc.comment']);
         }
 
         return [];
@@ -53,15 +52,12 @@ class ByDocComment extends JsonRpcGenerator
     protected function buildOperation($operation): array
     {
         return [
-            IOperation::FIELD__NAME => $this->getOperationName(),
-            IOperation::FIELD__TITLE => $this->getOperationTitle(),
-            IOperation::FIELD__DESCRIPTION => $this->getOperationDescription(),
-            IOperation::FIELD__METHOD => '',
-            IOperation::FIELD__ITEM_NAME => '',
-            IOperation::FIELD__ITEM_CLASS => '',
-            IOperation::FIELD__ITEM_REPO => '',
-            IOperation::FIELD__CLASS => get_class($operation),
-            IOperation::FIELD__SPEC => [
+            IJsonRpcOperation::FIELD__NAME => $this->getOperationName(),
+            IJsonRpcOperation::FIELD__TITLE => $this->getOperationTitle(),
+            IJsonRpcOperation::FIELD__DESCRIPTION => $this->getOperationDescription(),
+            IJsonRpcOperation::FIELD__CLASS => get_class($operation),
+            IJsonRpcOperation::FIELD__PARAMETERS => [],
+            IJsonRpcOperation::FIELD__SPECS => [
                 "request" => ["type" => "object", "properties" => $this->getRequestProperties()],
                 "response" => ["type" => "object", "properties" => $this->getResponseProperties()]
             ]

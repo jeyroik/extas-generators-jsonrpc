@@ -2,12 +2,7 @@
 namespace extas\components\jsonrpc\generators;
 
 use extas\components\generators\jsonrpc\JsonRpcGenerator;
-use extas\components\jsonrpc\operations\Create;
-use extas\components\jsonrpc\operations\Delete;
-use extas\components\jsonrpc\operations\Index;
-use extas\components\jsonrpc\operations\Update;
-use extas\interfaces\jsonrpc\operations\IOperation;
-use extas\components\jsonrpc\crawlers\ByPluginInstallDefault as Crawler;
+use extas\interfaces\operations\IJsonRpcOperation;
 use extas\interfaces\stages\IStageInstallSection;
 
 /**
@@ -35,8 +30,8 @@ class ByInstallSection extends JsonRpcGenerator
      */
     protected function run(array $sourceItems): array
     {
-        if (isset($sourceItems[Crawler::NAME])) {
-            return $this->generate($sourceItems[Crawler::NAME]);
+        if (isset($sourceItems['by.install.sections'])) {
+            return $this->generate($sourceItems['by.install.sections']);
         }
 
         return [];
@@ -211,7 +206,11 @@ class ByInstallSection extends JsonRpcGenerator
      */
     protected function constructCreate(string $name)
     {
-        return $this->constructCRUDOperation('create', $name, Create::class);
+        return $this->constructCRUDOperation(
+            'create',
+            $name,
+            'extas\components\jsonrpc\operations\Create'
+        );
     }
 
     /**
@@ -221,28 +220,33 @@ class ByInstallSection extends JsonRpcGenerator
      */
     protected function constructIndex(string $name)
     {
-        return $this->constructCRUDOperation('index', $name, Index::class, [
-            "request" => [
-                "type" => "object",
-                "properties" => [
-                    "limit" => [
-                        "type" => "number"
+        return $this->constructCRUDOperation(
+            'index',
+            $name,
+            'extas\components\jsonrpc\operations\Index',
+                [
+                "request" => [
+                    "type" => "object",
+                    "properties" => [
+                        "limit" => [
+                            "type" => "number"
+                        ]
                     ]
-                ]
-            ],
-            "response" => [
-                "type" => "object",
-                "properties" => [
-                    "items" => [
-                        "type" => "object",
-                        "properties" => $this->currentProperties
-                    ],
-                    "total" => [
-                        "type" => "number"
+                ],
+                "response" => [
+                    "type" => "object",
+                    "properties" => [
+                        "items" => [
+                            "type" => "object",
+                            "properties" => $this->currentProperties
+                        ],
+                        "total" => [
+                            "type" => "number"
+                        ]
                     ]
                 ]
             ]
-        ]);
+        );
     }
 
     /**
@@ -252,7 +256,11 @@ class ByInstallSection extends JsonRpcGenerator
      */
     protected function constructUpdate(string $name)
     {
-        return $this->constructCRUDOperation('update', $name, Update::class);
+        return $this->constructCRUDOperation(
+            'update',
+            $name,
+            'extas\components\jsonrpc\operations\Update'
+        );
     }
 
     /**
@@ -262,7 +270,11 @@ class ByInstallSection extends JsonRpcGenerator
      */
     protected function constructDelete(string $name)
     {
-        return $this->constructCRUDOperation('delete', $name, Delete::class);
+        return $this->constructCRUDOperation(
+            'delete',
+            $name,
+            'extas\components\jsonrpc\operations\Delete'
+        );
     }
 
     /**
@@ -294,15 +306,29 @@ class ByInstallSection extends JsonRpcGenerator
         ];
 
         return [
-            IOperation::FIELD__NAME => $operationName . '.' . $crudName,
-            IOperation::FIELD__TITLE => $this->getHighName($crudName),
-            IOperation::FIELD__DESCRIPTION => $this->getHighName($crudName),
-            IOperation::FIELD__METHOD => $crudName,
-            IOperation::FIELD__ITEM_NAME => $operationName,
-            IOperation::FIELD__ITEM_CLASS => $this->getCurrentPluginProperty('selfItemClass'),
-            IOperation::FIELD__ITEM_REPO => $this->getCurrentPluginProperty('selfRepositoryClass'),
-            IOperation::FIELD__CLASS => $operationClass,
-            IOperation::FIELD__SPEC => $specs
+            IJsonRpcOperation::FIELD__NAME => $operationName . '.' . $crudName,
+            IJsonRpcOperation::FIELD__TITLE => $this->getHighName($crudName),
+            IJsonRpcOperation::FIELD__DESCRIPTION => $this->getHighName($crudName),
+            IJsonRpcOperation::FIELD__PARAMETERS => [
+                IJsonRpcOperation::PARAM__ITEM_NAME => [
+                    'name' => IJsonRpcOperation::PARAM__ITEM_NAME,
+                    'value' => $operationName
+                ],
+                IJsonRpcOperation::PARAM__ITEM_CLASS => [
+                    'name' => IJsonRpcOperation::PARAM__ITEM_CLASS,
+                    'value' => $this->getCurrentPluginProperty('selfItemClass')
+                ],
+                IJsonRpcOperation::PARAM__ITEM_REPOSITORY => [
+                    'name' => IJsonRpcOperation::PARAM__ITEM_REPOSITORY,
+                    'value' => $this->getCurrentPluginProperty('selfRepositoryClass')
+                ],
+                IJsonRpcOperation::PARAM__METHOD => [
+                    'name' => IJsonRpcOperation::PARAM__ITEM_NAME,
+                    'value' => $crudName
+                ]
+            ],
+            IJsonRpcOperation::FIELD__CLASS => $operationClass,
+            IJsonRpcOperation::FIELD__SPECS => $specs
         ];
     }
 
