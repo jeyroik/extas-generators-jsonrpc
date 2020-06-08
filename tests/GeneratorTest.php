@@ -4,6 +4,7 @@ namespace tests;
 use extas\components\console\TSnuffConsole;
 use extas\components\generators\jsonrpc\ByDocComment;
 use extas\components\generators\jsonrpc\ByInstallSection;
+use extas\components\generators\JsonRpcGenerator;
 use extas\components\repositories\TSnuffRepository;
 
 use Dotenv\Dotenv;
@@ -43,7 +44,11 @@ class GeneratorTest extends TestCase
         $result = $generator->generate($plugins);
 
         $mustBe = include 'specs.php';
-        $this->assertEquals($mustBe, $result, 'Current: ' . print_r($result, true));
+        $this->assertEquals(
+            $mustBe,
+            $result[JsonRpcGenerator::FIELD__OPERATIONS],
+            'Current: ' . print_r($result, true)
+        );
     }
 
     public function testGenerateByDocComment()
@@ -57,7 +62,11 @@ class GeneratorTest extends TestCase
         $result = $generator->generate($plugins);
         $mustBe = include 'specs.comments.php';
 
-        $this->assertEquals($mustBe, $result, 'Current: ' . print_r($result, true));
+        $this->assertEquals(
+            $mustBe,
+            $result[JsonRpcGenerator::FIELD__OPERATIONS],
+            'Current: ' . print_r($result, true)
+        );
     }
 
     /**
