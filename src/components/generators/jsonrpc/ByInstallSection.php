@@ -1,7 +1,7 @@
 <?php
-namespace extas\components\jsonrpc\generators;
+namespace extas\components\generators\jsonrpc;
 
-use extas\components\generators\jsonrpc\JsonRpcGenerator;
+use extas\components\generators\JsonRpcGenerator;
 use extas\interfaces\operations\IJsonRpcOperation;
 use extas\interfaces\stages\IStageInstallSection;
 

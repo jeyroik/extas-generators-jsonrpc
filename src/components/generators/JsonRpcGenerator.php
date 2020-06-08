@@ -1,5 +1,5 @@
 <?php
-namespace extas\components\generators\jsonrpc;
+namespace extas\components\generators;
 
 use extas\components\generators\GeneratorDispatcher;
 use extas\components\THasIO;

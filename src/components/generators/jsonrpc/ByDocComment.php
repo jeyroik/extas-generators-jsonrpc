@@ -1,6 +1,7 @@
 <?php
 namespace extas\components\generators\jsonrpc;
 
+use extas\components\generators\JsonRpcGenerator;
 use extas\interfaces\operations\IJsonRpcOperation;
 
 /**

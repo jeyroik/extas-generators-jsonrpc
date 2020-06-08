@@ -3,7 +3,7 @@ namespace tests;
 
 use extas\components\console\TSnuffConsole;
 use extas\components\generators\jsonrpc\ByDocComment;
-use extas\components\jsonrpc\generators\ByInstallSection;;
+use extas\components\generators\jsonrpc\ByInstallSection;
 use extas\components\repositories\TSnuffRepository;
 
 use Dotenv\Dotenv;
