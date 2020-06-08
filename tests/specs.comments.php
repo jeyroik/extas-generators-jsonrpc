@@ -1,18 +1,15 @@
 <?php
 
-use extas\interfaces\jsonrpc\operations\IOperation;
+use extas\interfaces\operations\IJsonRpcOperation as IOperation;
 
 return [
     [
         IOperation::FIELD__NAME => 'test',
         IOperation::FIELD__TITLE => 'Test',
         IOperation::FIELD__DESCRIPTION => 'This is operation for tests only',
-        IOperation::FIELD__METHOD => '',
-        IOperation::FIELD__ITEM_NAME => '',
-        IOperation::FIELD__ITEM_CLASS => '',
-        IOperation::FIELD__ITEM_REPO => '',
+        IOperation::FIELD__PARAMETERS => [],
         IOperation::FIELD__CLASS => \tests\OperationWithDocComment::class,
-        IOperation::FIELD__SPEC => [
+        IOperation::FIELD__SPECS => [
             "request" => [
                 "type" => "object",
                 "properties" => [

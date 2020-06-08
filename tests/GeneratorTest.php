@@ -43,7 +43,7 @@ class GeneratorTest extends TestCase
         $result = $generator->generate($plugins);
 
         $mustBe = include 'specs.php';
-        $this->assertEquals($mustBe, $result);
+        $this->assertEquals($mustBe, $result, 'Current: ' . print_r($result, true));
     }
 
     public function testGenerateByDocComment()
@@ -57,7 +57,7 @@ class GeneratorTest extends TestCase
         $result = $generator->generate($plugins);
         $mustBe = include 'specs.comments.php';
 
-        $this->assertEquals($mustBe, $result);
+        $this->assertEquals($mustBe, $result, 'Current: ' . print_r($result, true));
     }
 
     /**
