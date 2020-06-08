@@ -6,8 +6,8 @@ use extas\components\items\SnuffItem;
 return [
     [
         IOperation::FIELD__NAME => 'snuff.item.create',
-        IOperation::FIELD__TITLE => 'Create jsonrpc operation',
-        IOperation::FIELD__DESCRIPTION => 'Create jsonrpc operation',
+        IOperation::FIELD__TITLE => 'Create snuff item',
+        IOperation::FIELD__DESCRIPTION => 'Create snuff item',
         IOperation::FIELD__PARAMETERS => [
             IOperation::PARAM__METHOD => [
                 'name' => IOperation::PARAM__METHOD,
@@ -45,8 +45,8 @@ return [
     ],
     [
         IOperation::FIELD__NAME => 'snuff.item.index',
-        IOperation::FIELD__TITLE => 'Index jsonrpc operation',
-        IOperation::FIELD__DESCRIPTION => 'Index jsonrpc operation',
+        IOperation::FIELD__TITLE => 'Index snuff item',
+        IOperation::FIELD__DESCRIPTION => 'Index snuff item',
         IOperation::FIELD__PARAMETERS => [
             IOperation::PARAM__METHOD => [
                 'name' => IOperation::PARAM__METHOD,
@@ -90,8 +90,8 @@ return [
         ]
     ],[
         IOperation::FIELD__NAME => 'snuff.item.update',
-        IOperation::FIELD__TITLE => 'Update jsonrpc operation',
-        IOperation::FIELD__DESCRIPTION => 'Update jsonrpc operation',
+        IOperation::FIELD__TITLE => 'Update snuff item',
+        IOperation::FIELD__DESCRIPTION => 'Update snuff item',
         IOperation::FIELD__PARAMETERS => [
             IOperation::PARAM__METHOD => [
                 'name' => IOperation::PARAM__METHOD,
@@ -128,8 +128,8 @@ return [
         ]
     ],[
         IOperation::FIELD__NAME => 'snuff.item.delete',
-        IOperation::FIELD__TITLE => 'Delete jsonrpc operation',
-        IOperation::FIELD__DESCRIPTION => 'Delete jsonrpc operation',
+        IOperation::FIELD__TITLE => 'Delete snuff item',
+        IOperation::FIELD__DESCRIPTION => 'Delete snuff item',
         IOperation::FIELD__PARAMETERS => [
             IOperation::PARAM__METHOD => [
                 'name' => IOperation::PARAM__METHOD,
