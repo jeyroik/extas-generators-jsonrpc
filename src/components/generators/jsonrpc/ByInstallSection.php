@@ -323,7 +323,7 @@ class ByInstallSection extends JsonRpcGenerator
                     'value' => $this->getCurrentPluginProperty('selfRepositoryClass')
                 ],
                 IJsonRpcOperation::PARAM__METHOD => [
-                    'name' => IJsonRpcOperation::PARAM__ITEM_NAME,
+                    'name' => IJsonRpcOperation::PARAM__METHOD,
                     'value' => $crudName
                 ]
             ],
