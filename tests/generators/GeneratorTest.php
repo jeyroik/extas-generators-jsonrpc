@@ -3,13 +3,15 @@ namespace tests;
 
 use extas\components\console\TSnuffConsole;
 use extas\components\generators\jsonrpc\ByDocComment;
+use extas\components\generators\jsonrpc\ByDynamicPlugins;
 use extas\components\generators\jsonrpc\ByInstallSection;
 use extas\components\generators\JsonRpcGenerator;
-use extas\components\repositories\TSnuffRepository;
-
+use tests\generators\misc\InstallSomething;
+use tests\generators\misc\OperationWithDocComment;
 use Dotenv\Dotenv;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Console\Input\InputInterface;
+use tests\generators\misc\SomeEntity;
 
 /**
  * Class GeneratorTest
@@ -20,7 +22,6 @@ use Symfony\Component\Console\Input\InputInterface;
 class GeneratorTest extends TestCase
 {
     use TSnuffConsole;
-    use TSnuffRepository;
 
     protected function setUp(): void
     {
@@ -43,7 +44,7 @@ class GeneratorTest extends TestCase
         $plugins = [new InstallSomething()];
         $result = $generator->generate($plugins);
 
-        $mustBe = include 'specs.php';
+        $mustBe = include getcwd() . '/tests/specs.php';
         $this->assertEquals(
             $mustBe,
             $result[JsonRpcGenerator::FIELD__OPERATIONS],
@@ -60,12 +61,36 @@ class GeneratorTest extends TestCase
 
         $plugins = [new OperationWithDocComment()];
         $result = $generator->generate($plugins);
-        $mustBe = include 'specs.comments.php';
+        $mustBe = include getcwd() . '/tests/specs.comments.php';
 
         $this->assertEquals(
             $mustBe,
             $result[JsonRpcGenerator::FIELD__OPERATIONS],
             'Current: ' . print_r($result, true)
+        );
+    }
+
+    public function testGenerateByDynamicPlugins()
+    {
+        $generator = new ByDynamicPlugins([
+            ByDocComment::FIELD__INPUT => $this->getTestInput(),
+            ByDocComment::FIELD__OUTPUT => $this->getOutput()
+        ]);
+
+        $result = $generator->generate([
+            [
+                'repository' => 'snuffRepository',
+                'item_class' => SomeEntity::class,
+                'entity_name' => 'snuff item'
+            ]
+        ]);
+
+        $mustBe = include getcwd() . '/tests/specs.dyn.php';
+
+        $this->assertEquals(
+            $mustBe,
+            $result[JsonRpcGenerator::FIELD__OPERATIONS],
+            'Incorrect result: ' . print_r($result, true)
         );
     }
 

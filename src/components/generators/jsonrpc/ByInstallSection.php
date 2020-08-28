@@ -2,6 +2,8 @@
 namespace extas\components\generators\jsonrpc;
 
 use extas\components\generators\JsonRpcGenerator;
+use extas\components\generators\TConstructOperations;
+use extas\components\reflections\ItemReflection;
 use extas\interfaces\operations\IJsonRpcOperation;
 use extas\interfaces\stages\IStageInstallSection;
 
@@ -13,6 +15,8 @@ use extas\interfaces\stages\IStageInstallSection;
  */
 class ByInstallSection extends JsonRpcGenerator
 {
+    use TConstructOperations;
+
     public const NAME = 'by.install.section';
 
     protected IStageInstallSection $currentPlugin;
@@ -97,10 +101,38 @@ class ByInstallSection extends JsonRpcGenerator
             $this->currentPlugin = $plugin;
             $this->currentProperties = $properties;
             foreach ($methods as $method) {
-                $methodConstruct = 'construct' . ucfirst($method);
-                $this->addOperation($this->$methodConstruct($dotted));
+                $this->addOperation($this->prepareOperationData($method, $dotted, $properties));
             }
         }
+    }
+
+    /**
+     * @param string $method
+     * @param string $dotted
+     * @param array $properties
+     * @return array
+     * @throws \Exception
+     */
+    protected function prepareOperationData(string $method, string $dotted, array $properties): array
+    {
+        $title = ucfirst($method) . ' ' . $this->getCurrentPluginProperty('selfName');
+        $methodConstruct = 'construct' . ucfirst($method);
+        /**
+         * @var IJsonRpcOperation $operation
+         */
+        $operation = $this->$methodConstruct($dotted, $properties);
+        $operation->setTitle($title)
+            ->setDescription($title)
+            ->setParameterValue(
+                IJsonRpcOperation::PARAM__ITEM_CLASS,
+                $this->getCurrentPluginProperty('selfItemClass')
+            )
+            ->setparameterValue(
+                IJsonRpcOperation::PARAM__ITEM_REPOSITORY,
+                $this->getCurrentPluginProperty('selfRepositoryClass')
+            );
+
+        return $operation->__toArray();
     }
 
     /**
@@ -124,221 +156,8 @@ class ByInstallSection extends JsonRpcGenerator
     protected function generateProperties(IStageInstallSection $plugin): array
     {
         $itemClass = $this->getCurrentPluginProperty('selfItemClass');
-        $reflection = new \ReflectionClass($itemClass);
-        $properties = $this->grabPropertiesFromComments($reflection);
+        $reflection = new ItemReflection($itemClass);
 
-        if (empty($properties)) {
-            $constants = $reflection->getConstants();
-            $this->appendConstantsToProperties($constants, $properties);
-            $methods = $reflection->getMethods(\ReflectionMethod::IS_PUBLIC);
-            $byNameMethods = array_column($methods, null, 'name');
-
-            $this->fillInPropertySpec($byNameMethods, $properties);
-        }
-
-        return $properties;
-    }
-
-    /**
-     * @param \ReflectionClass $reflection
-     * @return array
-     */
-    protected function grabPropertiesFromComments(\ReflectionClass $reflection): array
-    {
-        $comment = $reflection->getDocComment();
-        preg_match_all('/@jsonrpc_field\s(\S+):(\S+)/', $comment, $matches);
-        $properties = [];
-
-        if (!empty($matches[1])) {
-            foreach ($matches[1] as $index => $propertyName) {
-                $properties[$propertyName] = ['type' => $matches[2][$index]];
-            }
-        }
-
-        return $properties;
-    }
-
-    /**
-     * @param string $property
-     * @param array $byNameMethods
-     * @return string
-     */
-    protected function generatePropertyType(string $property, array $byNameMethods): string
-    {
-        $methodName = 'get' . ucwords(str_replace('_', ' ', $property));
-        $type = 'string';
-        if (isset($byNameMethods[$methodName])) {
-            $returnType = $byNameMethods[$methodName]->getReturnType();
-            $type = $returnType ? $returnType->getName() : 'string';
-        }
-
-        return $type;
-    }
-
-    /**
-     * @param array $byNameMethods
-     * @param array $properties
-     */
-    protected function fillInPropertySpec(array $byNameMethods, array &$properties): void
-    {
-        foreach ($properties as $property => $spec) {
-            $properties[$property] = ['type' => $this->generatePropertyType($property, $byNameMethods)];
-        }
-    }
-
-    /**
-     * @param array $constants
-     * @param array $properties
-     */
-    protected function appendConstantsToProperties(array $constants, array &$properties): void
-    {
-        foreach ($constants as $name => $value) {
-            if (strpos($name, 'FIELD') !== false) {
-                $properties[$value] = [];
-            }
-        }
-    }
-
-    /**
-     * @param string $name
-     * @return array
-     * @throws \Exception
-     */
-    protected function constructCreate(string $name)
-    {
-        return $this->constructCRUDOperation(
-            'create',
-            $name,
-            'extas\components\jsonrpc\operations\Create'
-        );
-    }
-
-    /**
-     * @param string $name
-     * @return array
-     * @throws \Exception
-     */
-    protected function constructIndex(string $name)
-    {
-        return $this->constructCRUDOperation(
-            'index',
-            $name,
-            'extas\components\jsonrpc\operations\Index',
-                [
-                "request" => [
-                    "type" => "object",
-                    "properties" => [
-                        "limit" => [
-                            "type" => "number"
-                        ]
-                    ]
-                ],
-                "response" => [
-                    "type" => "object",
-                    "properties" => [
-                        "items" => [
-                            "type" => "object",
-                            "properties" => $this->currentProperties
-                        ],
-                        "total" => [
-                            "type" => "number"
-                        ]
-                    ]
-                ]
-            ]
-        );
-    }
-
-    /**
-     * @param string $name
-     * @return array
-     * @throws \Exception
-     */
-    protected function constructUpdate(string $name)
-    {
-        return $this->constructCRUDOperation(
-            'update',
-            $name,
-            'extas\components\jsonrpc\operations\Update'
-        );
-    }
-
-    /**
-     * @param string $name
-     * @return array
-     * @throws \Exception
-     */
-    protected function constructDelete(string $name)
-    {
-        return $this->constructCRUDOperation(
-            'delete',
-            $name,
-            'extas\components\jsonrpc\operations\Delete'
-        );
-    }
-
-    /**
-     * @param string $crudName
-     * @param string $operationName
-     * @param string $operationClass
-     * @param array $specs
-     * @return array
-     * @throws \Exception
-     */
-    protected function constructCRUDOperation(
-        string $crudName,
-        string $operationName,
-        string $operationClass,
-        array $specs = []
-    ): array
-    {
-        $specs = $specs ?: [
-            "request" => [
-                "type" => "object",
-                "properties" => [
-                    "data" => [
-                        "type" => "object",
-                        "properties" => $this->currentProperties
-                    ]
-                ]
-            ],
-            "response" => ["type" => "object", "properties" => $this->currentProperties]
-        ];
-
-        return [
-            IJsonRpcOperation::FIELD__NAME => $operationName . '.' . $crudName,
-            IJsonRpcOperation::FIELD__TITLE => $this->getHighName($crudName),
-            IJsonRpcOperation::FIELD__DESCRIPTION => $this->getHighName($crudName),
-            IJsonRpcOperation::FIELD__PARAMETERS => [
-                IJsonRpcOperation::PARAM__ITEM_NAME => [
-                    'name' => IJsonRpcOperation::PARAM__ITEM_NAME,
-                    'value' => $operationName
-                ],
-                IJsonRpcOperation::PARAM__ITEM_CLASS => [
-                    'name' => IJsonRpcOperation::PARAM__ITEM_CLASS,
-                    'value' => $this->getCurrentPluginProperty('selfItemClass')
-                ],
-                IJsonRpcOperation::PARAM__ITEM_REPOSITORY => [
-                    'name' => IJsonRpcOperation::PARAM__ITEM_REPOSITORY,
-                    'value' => $this->getCurrentPluginProperty('selfRepositoryClass')
-                ],
-                IJsonRpcOperation::PARAM__METHOD => [
-                    'name' => IJsonRpcOperation::PARAM__METHOD,
-                    'value' => $crudName
-                ]
-            ],
-            IJsonRpcOperation::FIELD__CLASS => $operationClass,
-            IJsonRpcOperation::FIELD__SPECS => $specs
-        ];
-    }
-
-    /**
-     * @param string $crudName
-     * @return string
-     * @throws \Exception
-     */
-    protected function getHighName(string $crudName): string
-    {
-        return ucfirst($crudName) . ' ' . $this->getCurrentPluginProperty('selfName');
+        return $reflection->getTypedProperties();
     }
 }

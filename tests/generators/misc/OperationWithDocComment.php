@@ -1,5 +1,5 @@
 <?php
-namespace tests;
+namespace tests\generators\misc;
 
 /**
  * Class OperationWithDocComment
