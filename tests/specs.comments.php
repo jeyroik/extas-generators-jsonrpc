@@ -8,7 +8,7 @@ return [
         IOperation::FIELD__TITLE => 'Test',
         IOperation::FIELD__DESCRIPTION => 'This is operation for tests only',
         IOperation::FIELD__PARAMETERS => [],
-        IOperation::FIELD__CLASS => \tests\OperationWithDocComment::class,
+        IOperation::FIELD__CLASS => \tests\generators\misc\OperationWithDocComment::class,
         IOperation::FIELD__SPECS => [
             "request" => [
                 "type" => "object",
