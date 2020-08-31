@@ -1,3 +1,7 @@
+# 0.2.2
+
+- Genrators paths in the `extas.json` fixed.
+
 # 0.2.1
 
 - Generator by dynamic plugins added to the `extas.json`.
