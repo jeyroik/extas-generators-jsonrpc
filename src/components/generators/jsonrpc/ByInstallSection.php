@@ -34,8 +34,10 @@ class ByInstallSection extends JsonRpcGenerator
      */
     protected function run(array $sourceItems): array
     {
-        if (isset($sourceItems['by.install.sections'])) {
-            return $this->generate($sourceItems['by.install.sections']);
+        if (isset($sourceItems['jsonrpc__install_section'])) {
+            return $this->generate($sourceItems['jsonrpc__install_section']);
+        } else {
+            $this->infoLn(['[generator][by install section] Missed data']);
         }
 
         return [];
