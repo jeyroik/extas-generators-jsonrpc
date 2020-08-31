@@ -1,3 +1,8 @@
+# 0.2.1
+
+- Generator by dynamic plugins added to the `extas.json`.
+- Other generators descriptions corrected.
+
 # 0.2.0
 
 - Generator by dynamic plugins added.
