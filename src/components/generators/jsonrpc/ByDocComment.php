@@ -21,8 +21,10 @@ class ByDocComment extends JsonRpcGenerator
      */
     protected function run(array $sourceItems): array
     {
-        if (isset($sourceItems['by.doc.comment'])) {
-            return $this->generate($sourceItems['by.doc.comment']);
+        if (isset($sourceItems['jsonrpc__doc_comment'])) {
+            return $this->generate($sourceItems['jsonrpc__doc_comment']);
+        } else {
+            $this->infoLn(['[generator][by doc comment] Missed data']);
         }
 
         return [];

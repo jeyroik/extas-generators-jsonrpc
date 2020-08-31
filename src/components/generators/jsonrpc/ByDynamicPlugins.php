@@ -27,8 +27,10 @@ class ByDynamicPlugins extends JsonRpcGenerator
      */
     protected function run(array $sourceItems): array
     {
-        if (isset($sourceItems['dynamic.plugins'])) {
-            return $this->generate($sourceItems['dynamic.plugins']);
+        if (isset($sourceItems['jsonrpc__dynamic_plugins'])) {
+            return $this->generate($sourceItems['jsonrpc__dynamic_plugins']);
+        } else {
+            $this->infoLn(['[generator][by dynamic plugins] Missed data']);
         }
 
         return [];
