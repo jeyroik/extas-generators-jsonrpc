@@ -1,3 +1,7 @@
+# 0.3.1
+
+- Up to `extas-operation-jsonprc` `v1.*`.
+
 # 0.3.0
 
 - New stage `extas.dynamic.plugins.prepared` added.
