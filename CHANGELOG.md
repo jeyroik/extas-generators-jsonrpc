@@ -1,3 +1,7 @@
+# 0.3.0
+
+- New stage `extas.dynamic.plugins.prepared` added.
+
 # 0.2.3
 
 - Names for results fixed.
