@@ -6,11 +6,14 @@ use extas\components\generators\jsonrpc\ByDocComment;
 use extas\components\generators\jsonrpc\ByDynamicPlugins;
 use extas\components\generators\jsonrpc\ByInstallSection;
 use extas\components\generators\JsonRpcGenerator;
+use extas\components\plugins\TSnuffPlugins;
+use extas\interfaces\stages\IStageDynamicPluginsPrepared;
 use tests\generators\misc\InstallSomething;
 use tests\generators\misc\OperationWithDocComment;
 use Dotenv\Dotenv;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Console\Input\InputInterface;
+use tests\generators\misc\PreparedPlugin;
 use tests\generators\misc\SomeEntity;
 
 /**
@@ -22,6 +25,7 @@ use tests\generators\misc\SomeEntity;
 class GeneratorTest extends TestCase
 {
     use TSnuffConsole;
+    use TSnuffPlugins;
 
     protected function setUp(): void
     {
@@ -32,6 +36,7 @@ class GeneratorTest extends TestCase
 
     protected function tearDown(): void
     {
+        $this->deleteSnuffPlugins();
     }
 
     public function testGenerateByPluginInstallDefault()
@@ -76,6 +81,8 @@ class GeneratorTest extends TestCase
             ByDocComment::FIELD__INPUT => $this->getTestInput(),
             ByDocComment::FIELD__OUTPUT => $this->getOutput()
         ]);
+
+        $this->createSnuffPlugin(PreparedPlugin::class, [IStageDynamicPluginsPrepared::NAME]);
 
         $result = $generator->generate([
             [

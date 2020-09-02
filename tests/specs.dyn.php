@@ -55,7 +55,8 @@ return [
                     ]
                 ]
             ]
-        ]
+        ],
+        'test' => 'is ok'
     ],
     [
         IOperation::FIELD__NAME => 'snuff.item.index',
@@ -108,7 +109,8 @@ return [
                     ]
                 ]
             ]
-        ]
+        ],
+        'test' => 'is ok'
     ],[
         IOperation::FIELD__NAME => 'snuff.item.update',
         IOperation::FIELD__TITLE => 'Update snuff item',
@@ -160,7 +162,8 @@ return [
                     ]
                 ]
             ]
-        ]
+        ],
+        'test' => 'is ok'
     ],[
         IOperation::FIELD__NAME => 'snuff.item.delete',
         IOperation::FIELD__TITLE => 'Delete snuff item',
@@ -212,6 +215,7 @@ return [
                     ]
                 ]
             ]
-        ]
+        ],
+        'test' => 'is ok'
     ],
 ];

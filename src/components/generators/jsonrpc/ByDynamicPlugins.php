@@ -5,6 +5,7 @@ use extas\components\generators\JsonRpcGenerator;
 use extas\components\generators\TConstructOperations;
 use extas\components\reflections\ItemReflection;
 use extas\interfaces\operations\IJsonRpcOperation;
+use extas\interfaces\stages\IStageDynamicPluginsPrepared;
 
 /**
  * Class ByDynamicPlugins
@@ -98,6 +99,13 @@ class ByDynamicPlugins extends JsonRpcGenerator
             )
             ->setTitle($title)
             ->setDescription($title);
+
+        foreach ($this->getPluginsByStage(IStageDynamicPluginsPrepared::NAME) as $plugin) {
+            /**
+             * @var IStageDynamicPluginsPrepared $plugin
+             */
+            $operation = $plugin($operation);
+        }
 
         return $operation->__toArray();
     }
