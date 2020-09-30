@@ -123,7 +123,7 @@ trait TConstructOperations
         $skeleton->setName($itemName . '.' . $crudName)
             ->setParameterValue($skeleton::PARAM__ITEM_NAME, $itemName)
             ->setParameterValue($skeleton::PARAM__METHOD, $crudName)
-            ->setClass('extas\components\jsonrpc\operations\\' . ucfirst($crudName))
+            ->setClass('extas\components\operations\jsonrpc\\' . ucfirst($crudName))
         ;
 
         return $skeleton;
