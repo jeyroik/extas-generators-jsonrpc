@@ -26,7 +26,7 @@ return [
                 'value' => 'snuffRepository'
             ],
         ],
-        IOperation::FIELD__CLASS => 'extas\components\jsonrpc\operations\Create',
+        IOperation::FIELD__CLASS => 'extas\components\operations\jsonrpc\Create',
         IOperation::FIELD__SPECS => [
             "request" => [
                 "type" => "object",
@@ -65,7 +65,7 @@ return [
                 'value' => 'snuffRepository'
             ],
         ],
-        IOperation::FIELD__CLASS => 'extas\components\jsonrpc\operations\Index',
+        IOperation::FIELD__CLASS => 'extas\components\operations\jsonrpc\Index',
         IOperation::FIELD__SPECS => [
             "request" => [
                 "type" => "object",
@@ -110,7 +110,7 @@ return [
                 'value' => 'snuffRepository'
             ],
         ],
-        IOperation::FIELD__CLASS => 'extas\components\jsonrpc\operations\Update',
+        IOperation::FIELD__CLASS => 'extas\components\operations\jsonrpc\Update',
         IOperation::FIELD__SPECS => [
             "request" => [
                 "type" => "object",
@@ -148,7 +148,7 @@ return [
                 'value' => 'snuffRepository'
             ],
         ],
-        IOperation::FIELD__CLASS => 'extas\components\jsonrpc\operations\Delete',
+        IOperation::FIELD__CLASS => 'extas\components\operations\jsonrpc\Delete',
         IOperation::FIELD__SPECS => [
             "request" => [
                 "type" => "object",
