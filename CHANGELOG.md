@@ -1,3 +1,7 @@
+# 0.3.2
+
+- Operations class path fixed.
+
 # 0.3.1
 
 - Up to `extas-operation-jsonprc` `v1.*`.
